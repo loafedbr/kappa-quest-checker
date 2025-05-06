@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kappa Quest Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1e1e2f;
+            color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 80px;
+        }
+        input.form-control {
+            background-color: #3a3a5c;
+            color: #fff;
+            border: 1px solid #3a3a5c;
+        }
+        .alert {
+            background-color: #3a3a5c;
+            color: #fff;
+            border: 1px solid #555;
+        }
+        .list-group-item-dark {
+            background-color: #1e1e2f;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background-color: #2b2b3d;
+            color: #aaa;
+        }
+        a {
+            color: #5ac8fa;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #91d8ff;
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+        }
+		.navbar a.nav-link:hover {
+        background-color: #3a3a5c;
+        border-radius: 4px;
+        padding: 2px 6px;
+        transition: background-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark" style="background-color: #2b2b3d; padding-top: 4px; padding-bottom: 4px;">
+    <div class="container d-flex flex-column align-items-center" style="margin-top: 4px;">
+        <span class="text-light fs-5 mb-2">Helpful Tarkov Links</span>
+        <div class="d-flex gap-3 flex-wrap justify-content-center" style="font-size: 0.875rem; line-height: 1;">
+            <a class="nav-link text-light p-0" href="https://escapefromtarkov.fandom.com/wiki/Bosses" target="_blank">Bosses Wiki</a>
+            <a class="nav-link text-light p-0" href="https://escapefromtarkov.fandom.com/wiki/Interactive_maps" target="_blank">Tarkov Maps</a>
+            <a class="nav-link text-light p-0" href="https://www.tarkov-goon-tracker.com/" target="_blank">Goon Tracker</a>
+            <a class="nav-link text-light p-0" href="https://www.eft-ammo.com/" target="_blank">Ammo Chart</a>
+            <a class="nav-link text-light p-0" href="https://escapefromtarkov.fandom.com/wiki/Quests" target="_blank">Quests Wiki</a>
+        </div>
+    </div>
+</nav>
+    <div class="container text-center">
+        <h1 class="mb-4">Kappa Quest Checker</h1>
+
+        <form method="POST" class="mb-4" onsubmit="showLoading()">
+            <input type="text" name="quest" class="form-control form-control-lg" placeholder="Enter quest name" required>
+            <button type="submit" class="btn btn-primary btn-lg mt-3" id="submit-btn">Check</button>
+        </form>
+
+        <div id="loading">
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        {% if result %}
+            {% if result.status == 'found' %}
+                <div class="alert alert-success">
+                    <h4>{{ result.quest_name }}</h4>
+                    <p>
+                        {% if result.required %}
+                            ✅ This quest <strong>is required</strong> for Kappa.
+                        {% else %}
+                            ❌ This quest <strong>is NOT required</strong> for Kappa.
+                        {% endif %}
+                    </p>
+                    <a href="{{ result.link }}" target="_blank">View Wiki Page</a>
+                </div>
+            {% elif result.status == 'not_found' %}
+                <div class="alert alert-danger">
+                    Quest not found. Please check the spelling.
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if suggestions %}
+            <div class="alert alert-info">
+                <p>Did you mean one of these?</p>
+                <ul class="list-group">
+                    {% for match in suggestions %}
+                        <li class="list-group-item list-group-item-dark">
+                            <a href="/?quest={{ match }}">{{ match }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        Built by loafedbr • <a href="https://github.com/loafedbr" target="_blank">GitHub</a> • 
+        <a href="https://twitter.com/loafedbr" target="_blank">Twitter</a> • 
+        <a href="https://www.twitch.tv/loafedbreadd" target="_blank">Twitch</a>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
