@@ -21,8 +21,6 @@ def get_youtube_videos(query):
     )
     response = request.execute()
 
-    print("Full YouTube API Response:")
-    print(response)  # 🔍 Print the raw API response to debug
 
     videos = []
     for item in response.get("items", []):
